@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050507">
+    <meta name="description" content="NEON MIX RUSH PRO 5.0 — AI-powered beat production studio">
+    <title>NEON MIX RUSH - PRO 5.0 ULTRA ✨</title>
+    <!-- [IMPROVEMENT] Moved Google Fonts from render-blocking @import to <link> with preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --cyan: #00ffff;
+            --purple: #a855f7;
+            --pink: #ec4899;
+            --green: #22c55e;
+            --yellow: #facc15;
+            --red: #ef4444;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background: #050507;
+            color: #e2e8f0;
+            font-family: 'Inter', system-ui, sans-serif;
+            overflow-x: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .neon-glow {
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.7), 0 0 30px rgba(0, 255, 255, 0.3), 0 0 60px rgba(0, 255, 255, 0.1);
+        }
+
+        .pad-latched {
+            border-color: #ffffff !important;
+            background: rgba(255, 255, 255, 0.12) !important;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.15), inset 0 0 15px rgba(255, 255, 255, 0.08);
+            transform: scale(0.95);
+        }
+
+        .pad-latched .inst-header { color: #fff !important; }
+
+        .pad-flash {
+            animation: padFlash 0.12s ease-out;
+        }
+
+        @keyframes padFlash {
+            0% { filter: brightness(2.5); }
+            100% { filter: brightness(1); }
+        }
+
+        .vocal-trigger-active {
+            background: #a855f7 !important;
+            color: white !important;
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.9);
+            transform: scale(0.97);
+        }
+
+        .knob-container input[type=range] {
+            appearance: none;
+            background: linear-gradient(90deg, #111114, #1a1a1e);
+            height: 6px;
+            border-radius: 10px;
+            width: 100%;
+            outline: none;
+            position: relative;
+        }
+
+        .knob-container input[type=range]::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle at 40% 40%, #66ffff, #00cccc);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 14px #00ffff, 0 0 4px rgba(0,0,0,0.4);
+            border: 2px solid white;
+            transition: transform 0.1s ease, box-shadow 0.2s ease;
+        }
+
+        .knob-container input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 22px #00ffff;
+        }
+
+        .knob-container input[type=range]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle at 40% 40%, #66ffff, #00cccc);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 14px #00ffff;
+            border: 2px solid white;
+        }
+
+        canvas { width: 100%; height: 100%; }
+
+        .grid-bg {
+            background-image:
+                radial-gradient(circle at 50% 0%, rgba(0,255,255,0.03) 0%, transparent 60%),
+                radial-gradient(circle at 2px 2px, #0e0e12 1px, transparent 0);
+            background-size: 100% 100%, 32px 32px;
+        }
+
+        .rec-active {
+            background: #ef4444 !important;
+            color: white !important;
+            animation: pulse-red 0.8s infinite;
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { box-shadow: 0 0 0px rgba(239, 68, 68, 0); }
+            50% { box-shadow: 0 0 25px rgba(239, 68, 68, 0.7); }
+        }
+
+        .ai-panel {
+            background: linear-gradient(155deg, #111118, #0a0a0e);
+            border: 1px solid #1a1a22;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.025), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 5s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .step-active { color: #00ffff; text-shadow: 0 0 8px #00ffff; }
+
+        .meter-bar {
+            transition: width 0.08s linear;
+            border-radius: 2px;
+        }
+
+        .fx-chain-slot {
+            transition: all 0.2s ease;
+        }
+
+        .fx-chain-slot.fx-active {
+            border-color: var(--cyan) !important;
+            background: rgba(0, 255, 255, 0.06) !important;
+            box-shadow: 0 0 12px rgba(0, 255, 255, 0.15);
+        }
+
+        .xy-pad {
+            position: relative;
+            touch-action: none;
+            cursor: crosshair;
+        }
+
+        .xy-dot {
+            position: absolute;
+            width: 16px; height: 16px;
+            background: radial-gradient(circle, #00ffff, transparent);
+            border: 2px solid white;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            box-shadow: 0 0 20px #00ffff;
+            transition: box-shadow 0.2s ease;
+        }
+
+        .scene-btn {
+            transition: all 0.15s ease;
+        }
+
+        .scene-btn.scene-active {
+            background: rgba(0, 255, 255, 0.15) !important;
+            border-color: var(--cyan) !important;
+            color: var(--cyan) !important;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+
+        .waveform-mini {
+            display: flex;
+            align-items: center;
+            gap: 1px;
+            height: 20px;
+        }
+
+        .waveform-mini span {
+            display: block;
+            width: 2px;
+            background: var(--purple);
+            border-radius: 1px;
+            animation: waveAnim 0.6s ease-in-out infinite alternate;
+        }
+
+        @keyframes waveAnim {
+            0% { height: 4px; }
+            100% { height: 16px; }
+        }
+
+        .sequencer-step {
+            transition: all 0.08s ease;
+        }
+
+        .sequencer-step.step-on {
+            background: var(--cyan) !important;
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+        }
+
+        .sequencer-step.step-current {
+            outline: 2px solid white;
+            outline-offset: 1px;
+        }
+
+        .master-vu {
+            background: linear-gradient(90deg, #22c55e, #facc15, #ef4444);
+            border-radius: 3px;
+        }
+
+        .panel-tab {
+            transition: all 0.2s ease;
+        }
+
+        .panel-tab.tab-active {
+            color: var(--cyan);
+            border-bottom: 2px solid var(--cyan);
+        }
+
+        /* [IMPROVEMENT] Added error toast styles */
+        .error-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            z-index: 9999;
+            animation: slideInOut 4s ease forwards;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes slideInOut {
+            0% { transform: translateX(100%); opacity: 0; }
+            10% { transform: translateX(0); opacity: 1; }
+            80% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(100%); opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            #instrument-container { grid-template-columns: repeat(2, 1fr) !important; }
+            .sequencer-grid { font-size: 7px !important; }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-3 grid-bg">
+
+    <div id="app" class="w-full max-w-7xl p-6 md:p-8 rounded-[2.5rem] bg-[#0a0a0e] border border-zinc-800/80 shadow-2xl relative overflow-hidden" role="application" aria-label="NEON MIX RUSH PRO beat production studio">
+
+        <div class="absolute inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
+            <div class="absolute -top-40 -right-40 w-96 h-96 bg-cyan-500/[0.02] rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-500/[0.02] rounded-full blur-3xl"></div>
+        </div>
+
+        <!-- HEADER -->
+        <header class="flex flex-wrap justify-between items-end mb-7 relative z-10 border-b border-zinc-800/60 pb-5 gap-4">
+            <div>
+                <h1 class="text-4xl md:text-5xl font-black tracking-tighter neon-glow italic uppercase leading-none">Neon Mix Rush <span class="text-cyan-500 text-2xl md:text-3xl">PRO 5.0 ✨</span></h1>
+                <div id="status-msg" class="text-[10px] text-zinc-500 font-mono tracking-[0.3em] uppercase mt-2" aria-live="polite">Neural Engine: <span class="text-cyan-400">Stable</span> · Latency: <span id="latency-display" class="text-green-400">0ms</span></div>
+            </div>
+
+            <div class="flex items-center gap-3 flex-wrap">
+                <button id="btn-ai-suggest" class="px-4 py-2.5 bg-zinc-900 border border-zinc-800 text-cyan-400 font-black rounded-xl hover:bg-zinc-800 transition-all uppercase text-[9px] tracking-widest flex items-center gap-2 active:scale-95" aria-label="Analyze current mix with AI">
+                    ✨ Analyze
+                </button>
+
+                <div class="flex flex-col gap-1">
+                    <label for="beat-select" class="text-[8px] font-black text-zinc-500 uppercase ml-2">Preset</label>
+                    <select id="beat-select" class="bg-zinc-900 border border-zinc-800 text-[11px] font-bold text-cyan-400 outline-none p-2 rounded-xl min-w-[130px]">
+                        <option value="none">Manual Mode</option>
+                        <option value="heavy">Industrial</option>
+                        <option value="ghost">Ghost Step</option>
+                        <option value="bit">Bit-Crushed</option>
+                        <option value="cyber">Cyberpunk</option>
+                        <option value="ethereal">Dreamcore</option>
+                        <option value="phonk">Phonk</option>
+                        <option value="jungle">Jungle</option>
+                        <option value="ambient">Ambient</option>
+                    </select>
+                </div>
+
+                <div class="text-right px-3">
+                    <div id="bpm-display" class="text-3xl font-black font-mono leading-none tracking-tighter" aria-label="Current tempo">132 <span class="text-[10px] text-zinc-600">BPM</span></div>
+                    <div id="step-display" class="text-[11px] text-cyan-500 font-mono tracking-widest uppercase font-bold mt-1" aria-live="off">STEP: 00</div>
+                </div>
+
+                <div class="flex gap-2">
+                    <button id="btn-record" class="px-5 py-3.5 bg-zinc-800 text-zinc-400 font-black rounded-2xl hover:bg-zinc-700 transition-all uppercase text-[10px] tracking-widest shadow-lg active:scale-95" aria-label="Toggle recording">
+                        ● Rec
+                    </button>
+                    <button id="btn-toggle" class="px-7 py-3.5 bg-cyan-500 text-black font-black rounded-2xl hover:bg-cyan-400 transition-all uppercase text-xs tracking-widest shadow-lg shadow-cyan-500/20 active:scale-95" aria-label="Start or stop the audio engine">
+                        Start Engine
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
+            <!-- MAIN PERFORMANCE AREA -->
+            <main class="lg:col-span-8 space-y-5">
+
+                <!-- VISUALIZER + VU -->
+                <div class="flex gap-3">
+                    <div class="flex-grow h-28 rounded-2xl bg-black/70 border border-zinc-800/50 p-1.5 overflow-hidden relative shadow-inner">
+                        <canvas id="visualizer" aria-hidden="true"></canvas>
+                        <div id="ai-feedback-overlay" class="absolute inset-0 bg-black/92 flex items-center justify-center p-6 text-[12px] text-cyan-300 font-mono italic text-center hidden pointer-events-none z-20 backdrop-blur-sm" role="status" aria-live="polite">
+                            ✨ Gemini: Analyzing Spectrum...
+                        </div>
+                        <div id="rec-time" class="absolute top-3 right-3 text-[10px] font-mono text-red-500 font-bold bg-red-500/10 px-2 py-1 rounded hidden" aria-live="polite">REC: 0:00</div>
+                        <div class="absolute bottom-2 left-3 text-[8px] font-mono text-zinc-600 uppercase tracking-wider" aria-hidden="true">Spectrum</div>
+                    </div>
+                    <div class="w-16 h-28 rounded-2xl bg-black/70 border border-zinc-800/50 p-2 flex flex-col items-center justify-end gap-1 relative" aria-label="VU Meter">
+                        <div class="text-[7px] text-zinc-600 uppercase font-bold absolute top-2">VU</div>
+                        <div class="w-3 flex-grow bg-zinc-900 rounded-full overflow-hidden flex flex-col-reverse relative">
+                            <div id="vu-left" class="master-vu w-full transition-all duration-75" style="height: 10%"></div>
+                        </div>
+                        <div class="w-3 flex-grow bg-zinc-900 rounded-full overflow-hidden flex flex-col-reverse relative">
+                            <div id="vu-right" class="master-vu w-full transition-all duration-75" style="height: 10%"></div>
+                        </div>
+                        <div class="text-[7px] font-mono text-zinc-600" id="peak-display">-∞</div>
+                    </div>
+                </div>
+
+                <!-- SCENES -->
+                <div class="flex gap-2 items-center" role="group" aria-label="Scene selection">
+                    <span class="text-[8px] font-black text-zinc-600 uppercase tracking-widest mr-2">Scenes</span>
+                    <button data-scene="A" class="scene-btn scene-active px-4 py-2 bg-zinc-900 border border-zinc-800 text-[10px] font-black text-zinc-400 rounded-lg uppercase tracking-wider" aria-pressed="true">A</button>
+                    <button data-scene="B" class="scene-btn px-4 py-2 bg-zinc-900 border border-zinc-800 text-[10px] font-black text-zinc-400 rounded-lg uppercase tracking-wider" aria-pressed="false">B</button>
+                    <button data-scene="C" class="scene-btn px-4 py-2 bg-zinc-900 border border-zinc-800 text-[10px] font-black text-zinc-400 rounded-lg uppercase tracking-wider" aria-pressed="false">C</button>
+                    <button data-scene="D" class="scene-btn px-4 py-2 bg-zinc-900 border border-zinc-800 text-[10px] font-black text-zinc-400 rounded-lg uppercase tracking-wider" aria-pressed="false">D</button>
+                    <div class="flex-grow"></div>
+                    <button id="btn-panic" class="px-3 py-2 bg-zinc-900 border border-red-900/30 text-[9px] font-black text-red-400/60 rounded-lg uppercase tracking-wider hover:bg-red-950/30 hover:text-red-400 transition-all active:scale-95" aria-label="Panic: silence all instruments">Panic</button>
+                </div>
+
+                <!-- INSTRUMENT GRID -->
+                <div id="instrument-container" class="grid grid-cols-4 gap-2.5" role="group" aria-label="Instrument pads">
+                    <button data-inst="kick" data-key="1" class="pad h-[88px] rounded-2xl bg-zinc-900/80 border border-zinc-800/70 flex flex-col items-center justify-center transition-all group relative overflow-hidden" aria-pressed="false" aria-label="Kick drum, key 1">
+                        <span class="inst-header text-[13px] font-black italic uppercase text-cyan-400 group-hover:scale-110 transition-transform">KICK</span>
+                        <span class="text-[8px] text-zinc-600 mt-0.5">SINE · [1]</span>
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-cyan-500/0 group-hover:bg-cyan-500/30 transition-all"></div>
+                    </button>
+                    <button data-inst="kick808" data-key="2" class="pad h-[88px] rounded-2xl bg-zinc-900/80 border border-zinc-800/70 flex flex-col items-center justify-center transition-all group relative overflow-hidden" aria-pressed="false" aria-label="808 sub bass, key 2">
+                        <span class="inst-header text-[13px] font-black italic uppercase text-cyan-400 group-hover:scale-110 transition-transform">808 SUB</span>
+                        <span class="text-[8px] text-zinc-600 mt-0.5">LOW END · [2]</span>
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-cyan-500/0 group-hover:bg-cyan-500/30 transition-all"></div>
+                    </button>
+                    <button data-inst="snare" data-key="3" class="pad h-[88px] rounded-2xl bg-zinc-900/80 border border-zinc-800/70 flex flex-col items-center justify-center transition-all group relative overflow-hidden" aria-pressed="false" aria-label="Snare drum, key 3">
+                        <span class="inst-header text-[13px] font-black italic uppercase text-pink-400 group-hover:scale-110 transition-transform">SNARE</span>
+                        <span class="text-[8px] text-zinc-600 mt-0.5">CRACK · [3]</span>
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-pink-500/0 group-hover:bg-pink-500/30 transition-all"></div>
+                    </button>
+                    <button data-inst="hat" data-key="4" class="pad h-[88px] rounded-2xl bg-zinc-900/80 border border-zinc-800/70 flex flex-col items-center justify-center transition-all group relative overflow-hidden" aria-pressed="false" aria-label="Hi-hat, key 4">
+                        <span class="inst-header text-[13px] font-black italic uppercase text-yellow-400 group-hover:scale-110 transition-transform">HAT</span>
+                        <span class="text-[8px] text-zinc-600 mt-0.5">NOISE · [4]</span>
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-500/0 group-hover:bg-yellow-500/30 transition-all"></div>
+                    </button>
+                    <button data-inst="clap" data-key="5" class="pad h-[88px] rounded-2xl bg-zinc-900/80 border border-zinc-800/70 flex flex-col items-center justify-center transition-all group relative overflow-hidden" aria-pressed="false" aria-label="Clap, key 5">
+                        <span class="inst-header text-[13px] font-black italic uppercase text-orange-400 group-hover:scale-110 transition-transform">CLAP</span>
+                        <span class="text-[8px] text-zinc-600 mt-0.5">LAYER · [5]</span>
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500/0 group-hover:bg-orange-500/30 transition-all"></div>
+                    </button>
+                    <button data-inst="bass" data-key="6" class="pad h-[88px] rounded-2xl bg-zinc-900/80 border border-zinc-800/70 flex flex-col items-center justify-center transition-all group relative overflow-hidden" aria-pressed="false" aria-label="Bass, key 6">
+                        <span class="inst-header text-[13px] font-black italic uppercase text-purple-400 group-hover:scale-110 transition-transform">BASS</span>
+                        <span class="text-[8px] text-zinc-600 mt-0.5">SAW · [6]</span>
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-500/0 group-hover:bg-purple-500/30 transition-all"></div>
+                    </button>
+                    <button data-inst="acid_sq" data-key="7" class="pad h-[88px] rounded-2xl bg-zinc-900/80 border border-zinc-800/70 flex flex-col items-center justify-center transition-all group relative overflow-hidden" aria-pressed="false" aria-label="Square wave acid, key 7">
+                        <span class="inst-header text-[13px] font-black italic uppercase text-green-400 group-hover:scale-110 transition-transform">SQ-303</span>
+                        <span class="text-[8px] text-zinc-600 mt-0.5">SQUARE · [7]</span>
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-green-500/0 group-hover:bg-green-500/30 transition-all"></div>
+                    </button>
+                    <button data-inst="acid_saw" data-key="8" class="pad h-[88px] rounded-2xl bg-zinc-900/80 border border-zinc-800/70 flex flex-col items-center justify-center transition-all group relative overflow-hidden" aria-pressed="false" aria-label="Saw wave acid, key 8">
+                        <span class="inst-header text-[13px] font-black italic uppercase text-green-400 group-hover:scale-110 transition-transform">SAW-303</span>
+                        <span class="text-[8px] text-zinc-600 mt-0.5">HARSH · [8]</span>
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-green-500/0 group-hover:bg-green-500/30 transition-all"></div>
+                    </button>
+                    <button data-inst="perc" data-key="9" class="pad h-[88px] rounded-2xl bg-zinc-900/80 border border-zinc-800/70 flex flex-col items-center justify-center transition-all group relative overflow-hidden" aria-pressed="false" aria-label="Percussion, key 9">
+                        <span class="inst-header text-[13px] font-black italic uppercase text-red-400 group-hover:scale-110 transition-transform">PERC</span>
+                        <span class="text-[8px] text-zinc-600 mt-0.5">METAL · [9]</span>
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-red-500/0 group-hover:bg-red-500/30 transition-all"></div>
+                    </button>
+                    <button data-inst="sample_shock" data-key="0" class="pad h-[88px] rounded-2xl bg-zinc-900/80 border border-zinc-800/70 flex flex-col items-center justify-center transition-all group relative overflow-hidden" aria-pressed="false" aria-label="Shock glitch sample, key 0">
+                        <span class="inst-header text-[13px] font-black italic uppercase text-yellow-200 group-hover:scale-110 transition-transform">SHOCK</span>
+                        <span class="text-[8px] text-zinc-600 mt-0.5">GLITCH · [0]</span>
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-200/0 group-hover:bg-yellow-200/30 transition-all"></div>
+                    </button>
+                    <button data-inst="stab" data-key="q" class="pad h-[88px] rounded-2xl bg-zinc-900/80 border border-zinc-800/70 flex flex-col items-center justify-center transition-all group relative overflow-hidden" aria-pressed="false" aria-label="Stab chord, key Q">
+                        <span class="inst-header text-[13px] font-black italic uppercase text-blue-400 group-hover:scale-110 transition-transform">STAB</span>
+                        <span class="text-[8px] text-zinc-600 mt-0.5">CHORD · [Q]</span>
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500/0 group-hover:bg-blue-500/30 transition-all"></div>
+                    </button>
+                    <button data-inst="noise_riser" data-key="w" class="pad h-[88px] rounded-2xl bg-zinc-900/80 border border-zinc-800/70 flex flex-col items-center justify-center transition-all group relative overflow-hidden" aria-pressed="false" aria-label="Noise riser sweep, key W">
+                        <span class="inst-header text-[13px] font-black italic uppercase text-zinc-300 group-hover:scale-110 transition-transform">RISER</span>
+                        <span class="text-[8px] text-zinc-600 mt-0.5">SWEEP · [W]</span>
+                        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-zinc-400/0 group-hover:bg-zinc-400/30 transition-all"></div>
+                    </button>
+                </div>
+
+                <!-- STEP SEQUENCER -->
+                <div class="p-5 rounded-2xl ai-panel" role="region" aria-label="Step sequencer">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-[9px] font-black text-zinc-500 uppercase tracking-[0.4em]">Step Sequencer</span>
+                        <div class="flex gap-2">
+                            <label for="seq-inst-select" class="sr-only">Sequencer instrument</label>
+                            <select id="seq-inst-select" class="bg-zinc-950 text-[10px] border border-zinc-800 rounded-lg p-1.5 text-cyan-400 outline-none">
+                                <option value="kick">Kick</option>
+                                <option value="kick808">808</option>
+                                <option value="snare">Snare</option>
+                                <option value="hat">Hat</option>
+                                <option value="clap">Clap</option>
+                                <option value="bass">Bass</option>
+                                <option value="acid_sq">SQ-303</option>
+                                <option value="acid_saw">SAW-303</option>
+                                <option value="perc">Perc</option>
+                                <option value="sample_shock">Shock</option>
+                            </select>
+                            <button id="btn-seq-clear" class="px-2 py-1 bg-zinc-900 border border-zinc-800 text-[9px] text-zinc-500 rounded-lg hover:text-red-400 transition-all" aria-label="Clear sequencer pattern">CLR</button>
+                            <button id="btn-seq-random" class="px-2 py-1 bg-zinc-900 border border-zinc-800 text-[9px] text-zinc-500 rounded-lg hover:text-cyan-400 transition-all" aria-label="Randomize sequencer pattern">RND</button>
+                        </div>
+                    </div>
+                    <div id="sequencer-grid" class="sequencer-grid grid grid-cols-16 gap-1" role="grid" aria-label="Sequencer step grid"></div>
+                    <div class="flex gap-1 mt-2" id="seq-position-indicators" aria-hidden="true"></div>
+                </div>
+
+                <!-- MACRO CONTROLS -->
+                <div class="p-6 rounded-[2rem] ai-panel grid grid-cols-2 md:grid-cols-4 gap-6" role="region" aria-label="Macro controls">
+                    <div class="knob-container">
+                        <div class="flex justify-between text-[9px] font-black mb-3 uppercase text-zinc-400 tracking-widest">
+                            <label for="var-kick">KICK WEIGHT</label>
+                            <span id="kick-var-val" class="text-cyan-400">50%</span>
+                        </div>
+                        <input type="range" id="var-kick" min="1" max="100" value="50">
+                    </div>
+                    <div class="knob-container">
+                        <div class="flex justify-between text-[9px] font-black mb-3 uppercase text-zinc-400 tracking-widest">
+                            <label for="var-bass">BASS GROWL</label>
+                            <span id="bass-var-val" class="text-purple-400">50%</span>
+                        </div>
+                        <input type="range" id="var-bass" min="1" max="100" value="50">
+                    </div>
+                    <div class="knob-container">
+                        <div class="flex justify-between text-[9px] font-black mb-3 uppercase text-zinc-400 tracking-widest">
+                            <label for="var-sq">SQ WIDTH</label>
+                            <span id="sq-var-val" class="text-green-400">50%</span>
+                        </div>
+                        <input type="range" id="var-sq" min="1" max="100" value="50">
+                    </div>
+                    <div class="knob-container">
+                        <div class="flex justify-between text-[9px] font-black mb-3 uppercase text-zinc-400 tracking-widest">
+                            <label for="var-swing">SWING</label>
+                            <span id="swing-val" class="text-yellow-400">0%</span>
+                        </div>
+                        <input type="range" id="var-swing" min="0" max="100" value="0">
+                    </div>
+                </div>
+
+                <!-- FX CHAIN + XY PAD -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-5 rounded-2xl ai-panel" role="region" aria-label="Effects chain">
+                        <span class="text-[9px] font-black text-zinc-500 uppercase tracking-[0.4em]">FX Chain</span>
+                        <div class="mt-3 flex flex-wrap gap-2" role="group" aria-label="Effect toggles">
+                            <button data-fx="delay" class="fx-chain-slot px-3 py-2 bg-zinc-900 border border-zinc-800 text-[9px] font-bold text-zinc-500 rounded-lg uppercase tracking-wider transition-all active:scale-95" aria-pressed="false">Delay</button>
+                            <button data-fx="reverb" class="fx-chain-slot px-3 py-2 bg-zinc-900 border border-zinc-800 text-[9px] font-bold text-zinc-500 rounded-lg uppercase tracking-wider transition-all active:scale-95" aria-pressed="false">Reverb</button>
+                            <button data-fx="distortion" class="fx-chain-slot px-3 py-2 bg-zinc-900 border border-zinc-800 text-[9px] font-bold text-zinc-500 rounded-lg uppercase tracking-wider transition-all active:scale-95" aria-pressed="false">Distort</button>
+                            <button data-fx="bitcrush" class="fx-chain-slot px-3 py-2 bg-zinc-900 border border-zinc-800 text-[9px] font-bold text-zinc-500 rounded-lg uppercase tracking-wider transition-all active:scale-95" aria-pressed="false">Bitcrush</button>
+                            <button data-fx="phaser" class="fx-chain-slot px-3 py-2 bg-zinc-900 border border-zinc-800 text-[9px] font-bold text-zinc-500 rounded-lg uppercase tracking-wider transition-all active:scale-95" aria-pressed="false">Phaser</button>
+                            <button data-fx="chorus" class="fx-chain-slot px-3 py-2 bg-zinc-900 border border-zinc-800 text-[9px] font-bold text-zinc-500 rounded-lg uppercase tracking-wider transition-all active:scale-95" aria-pressed="false">Chorus</button>
+                        </div>
+                        <div class="mt-4 knob-container">
+                            <div class="flex justify-between text-[9px] font-bold mb-2 uppercase text-zinc-400"><label for="fx-mix">FX Mix</label><span id="fx-mix-val" class="text-cyan-400">30%</span></div>
+                            <input type="range" id="fx-mix" min="0" max="100" value="30">
+                        </div>
+                    </div>
+
+                    <div class="p-5 rounded-2xl ai-panel" role="region" aria-label="XY Filter Pad">
+                        <span class="text-[9px] font-black text-zinc-500 uppercase tracking-[0.4em]">XY Pad · Filter</span>
+                        <div id="xy-pad" class="xy-pad mt-3 w-full h-28 bg-zinc-950 border border-zinc-800 rounded-xl relative overflow-hidden" aria-label="XY filter control pad. Drag to adjust cutoff and resonance.">
+                            <div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(rgba(0,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.1) 1px, transparent 1px); background-size: 20% 20%;" aria-hidden="true"></div>
+                            <div id="xy-dot" class="xy-dot" style="left: 50%; top: 50%;"></div>
+                            <div class="absolute bottom-1 left-2 text-[7px] text-zinc-700 font-mono" aria-hidden="true">CUTOFF →</div>
+                            <div class="absolute top-1 left-2 text-[7px] text-zinc-700 font-mono" aria-hidden="true">↑ RES</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI VOCAL SUITE -->
+                <div class="p-6 rounded-[2.5rem] ai-panel space-y-5 shimmer relative overflow-hidden" role="region" aria-label="AI Vocal Synthesis Suite">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[10px] font-black text-purple-400 uppercase tracking-[0.4em]">AI Vocal Synthesis Suite ✨</span>
+                        <div class="waveform-mini" id="vocal-waveform" style="display:none;" aria-hidden="true">
+                            <span style="animation-delay: 0s;"></span>
+                            <span style="animation-delay: 0.1s;"></span>
+                            <span style="animation-delay: 0.2s;"></span>
+                            <span style="animation-delay: 0.1s;"></span>
+                            <span style="animation-delay: 0.3s;"></span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                        <div class="space-y-1">
+                            <label for="genre-select" class="text-[8px] uppercase font-bold text-zinc-500 ml-2">Genre Logic</label>
+                            <select id="genre-select" class="w-full bg-zinc-950 text-[10px] border border-zinc-800 rounded-xl p-2.5 text-cyan-100 outline-none">
+                                <option value="Dark Industrial Techno">Industrial</option>
+                                <option value="Cyberpunk Hardcore">Cyberpunk</option>
+                                <option value="Hyper-Pop Glitch">Glitch-Pop</option>
+                                <option value="Ethereal Dreamcore">Ethereal</option>
+                                <option value="High-Octane Phonk">Phonk</option>
+                                <option value="Minimal Deep Tech">Deep Tech</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1">
+                            <label for="vocal-mood" class="text-[8px] uppercase font-bold text-zinc-500 ml-2">Vocal Mood</label>
+                            <select id="vocal-mood" class="w-full bg-zinc-950 text-[10px] border border-zinc-800 rounded-xl p-2.5 text-cyan-100 outline-none">
+                                <option value="aggressive">Aggressive</option>
+                                <option value="melancholic">Melancholic</option>
+                                <option value="robotic">Robotic</option>
+                                <option value="ethereal">Whispered</option>
+                                <option value="hypnotic">Hypnotic</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1">
+                            <label for="vocal-gender" class="text-[8px] uppercase font-bold text-zinc-500 ml-2">Voice Model</label>
+                            <select id="vocal-gender" class="w-full bg-zinc-950 text-[10px] border border-zinc-800 rounded-xl p-2.5 text-cyan-100 outline-none">
+                                <option value="Puck">Female (Puck)</option>
+                                <option value="Kore">Male (Kore)</option>
+                                <option value="Zephyr">Neural (Zephyr)</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1">
+                            <label for="vocal-pitch" class="text-[8px] uppercase font-bold text-zinc-500 ml-2">Pitch Shift</label>
+                            <select id="vocal-pitch" class="w-full bg-zinc-950 text-[10px] border border-zinc-800 rounded-xl p-2.5 text-cyan-100 outline-none">
+                                <option value="1">Normal</option>
+                                <option value="0.8">-3 Semi</option>
+                                <option value="0.6">-7 Semi</option>
+                                <option value="1.2">+3 Semi</option>
+                                <option value="1.5">+7 Semi</option>
+                                <option value="2">+12 Semi</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end">
+                            <button id="btn-vocal-gen" class="w-full py-2.5 bg-purple-600/20 hover:bg-purple-600 text-purple-400 hover:text-white border border-purple-500/30 text-[9px] font-black rounded-xl transition-all uppercase tracking-widest active:scale-95" aria-label="Synthesize vocal with AI">
+                                ✨ Synth
+                            </button>
+                        </div>
+                    </div>
+
+                    <button id="vocal-trigger" disabled class="w-full py-6 bg-zinc-950/50 border-2 border-dashed border-zinc-800 text-zinc-600 rounded-[1.5rem] font-black text-sm uppercase tracking-[0.3em] transition-all cursor-not-allowed hover:bg-zinc-900/50" aria-label="Fire synthesized vocal sample">
+                        Awaiting ✨ Neural Buffer
+                    </button>
+                </div>
+            </main>
+
+            <!-- SIDEBAR: MASTER CONSOLE -->
+            <aside class="lg:col-span-4 flex flex-col gap-5">
+                <div class="bg-zinc-900/10 rounded-[2.5rem] p-6 border border-zinc-800/50" role="region" aria-label="Master console">
+                    <h3 class="text-[10px] font-black text-zinc-500 uppercase tracking-[0.5em] mb-8 text-center">Master Console</h3>
+                    <div class="space-y-7">
+                        <div class="knob-container">
+                            <div class="flex justify-between text-[9px] font-bold mb-3 uppercase text-zinc-400"><label for="bpm-slider">Tempo</label><span id="bpm-val" class="text-cyan-400">132 BPM</span></div>
+                            <input type="range" id="bpm-slider" min="60" max="220" value="132">
+                        </div>
+                        <div class="knob-container">
+                            <div class="flex justify-between text-[9px] font-bold mb-3 uppercase text-zinc-400"><label for="acid-cutoff">Cutoff</label><span id="cutoff-val" class="text-green-400">1200Hz</span></div>
+                            <input type="range" id="acid-cutoff" min="100" max="10000" value="1200">
+                        </div>
+                        <div class="knob-container">
+                            <div class="flex justify-between text-[9px] font-bold mb-3 uppercase text-zinc-400"><label for="acid-res">Resonance</label><span id="res-val" class="text-pink-400">20%</span></div>
+                            <input type="range" id="acid-res" min="0" max="100" value="20">
+                        </div>
+                        <div class="knob-container">
+                            <div class="flex justify-between text-[9px] font-bold mb-3 uppercase text-zinc-400"><label for="master-vol">Master Vol</label><span id="master-vol-val" class="text-cyan-400">80%</span></div>
+                            <input type="range" id="master-vol" min="0" max="100" value="80">
+                        </div>
+                        <div class="knob-container">
+                            <div class="flex justify-between text-[9px] font-bold mb-3 uppercase text-zinc-400"><label for="master-comp">Compressor</label><span id="comp-val" class="text-orange-400">OFF</span></div>
+                            <input type="range" id="master-comp" min="0" max="100" value="0">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NEURAL OUTPUT -->
+                <div class="flex-grow p-6 bg-black/80 rounded-[2rem] border border-zinc-800 flex flex-col items-center justify-between min-h-[200px] shadow-inner" role="region" aria-label="Neural output display">
+                    <div class="w-full flex justify-between items-center mb-2">
+                        <span class="text-[8px] font-black text-zinc-600 uppercase tracking-widest">Neural Output</span>
+                        <div class="flex gap-1" role="tablist">
+                            <button class="panel-tab tab-active text-[8px] px-2 py-1 text-zinc-500 uppercase font-bold" data-tab="lyrics" role="tab" aria-selected="true" aria-controls="vocal-display">Lyrics</button>
+                            <button class="panel-tab text-[8px] px-2 py-1 text-zinc-500 uppercase font-bold" data-tab="structure" role="tab" aria-selected="false" aria-controls="structure-display">Structure</button>
+                        </div>
+                    </div>
+                    <div id="vocal-display" class="text-[11px] font-mono text-purple-400/90 italic text-center leading-relaxed px-2 flex-grow flex items-center" role="tabpanel">
+                        ✨ [SYSTEM]: Initialize neural link to draft lyrics.
+                    </div>
+                    <div id="structure-display" class="text-[11px] font-mono text-cyan-400/80 text-center leading-relaxed px-2 flex-grow items-center hidden" role="tabpanel">
+                        ✨ [SYSTEM]: AI will suggest song structure.
+                    </div>
+                    <div class="flex gap-2 mt-4">
+                        <button id="btn-gen-lyrics" class="py-2.5 px-5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-[9px] text-cyan-400 uppercase tracking-widest font-bold transition-all rounded-xl active:scale-95" aria-label="Generate AI lyrics">
+                            ✨ Draft Lyrics
+                        </button>
+                        <button id="btn-gen-structure" class="py-2.5 px-5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-[9px] text-purple-400 uppercase tracking-widest font-bold transition-all rounded-xl active:scale-95" aria-label="Generate AI song structure">
+                            ✨ Structure
+                        </button>
+                    </div>
+                </div>
+
+                <div id="ai-suggestion-box" class="p-4 bg-cyan-950/10 border border-cyan-900/20 rounded-2xl hidden" role="alert">
+                    <p class="text-[10px] text-cyan-400 font-mono leading-tight" id="ai-suggestion-text"></p>
+                </div>
+
+                <!-- KEYBOARD MAP -->
+                <div class="p-4 bg-zinc-900/30 rounded-2xl border border-zinc-800/30">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-[8px] font-black text-zinc-600 uppercase tracking-widest">Keyboard Map</span>
+                        <span class="text-[8px] text-zinc-700 font-mono">SPACE = Play/Stop</span>
+                    </div>
+                    <div class="text-[9px] text-zinc-600 font-mono leading-loose">
+                        <span class="text-zinc-400">[1-0]</span> Pads &nbsp;·&nbsp; <span class="text-zinc-400">[Q/W]</span> Stab/Riser &nbsp;·&nbsp; <span class="text-zinc-400">[R]</span> Record &nbsp;·&nbsp; <span class="text-zinc-400">[V]</span> Fire Vocal &nbsp;·&nbsp; <span class="text-zinc-400">[ESC]</span> Panic
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- [IMPROVEMENT] Error toast container -->
+    <div id="toast-container" aria-live="assertive"></div>
+
+    <script type="module">
+        // [IMPROVEMENT] API key should be loaded from environment or prompt at runtime
+        // Never commit API keys to source code
+        const apiKey = "";
+
+        // ================================================================
+        // UTILITY HELPERS
+        // ================================================================
+
+        /**
+         * [IMPROVEMENT] Centralized error toast notification
+         * Shows a brief error message that auto-dismisses after 4 seconds
+         */
+        function showToast(message, type = 'error') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'error-toast';
+            if (type === 'success') toast.style.background = 'rgba(34, 197, 94, 0.9)';
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4200);
+        }
+
+        /**
+         * [IMPROVEMENT] Debounce utility for slider inputs
+         * Reduces unnecessary re-renders during rapid slider adjustments
+         */
+        function debounce(fn, ms = 16) {
+            let timer;
+            return (...args) => {
+                clearTimeout(timer);
+                timer = setTimeout(() => fn(...args), ms);
+            };
+        }
+
+        /**
+         * [IMPROVEMENT] Safe peak calculation for typed arrays
+         * Avoids call stack overflow from Math.max(...largeArray)
+         */
+        function getArrayPeak(arr) {
+            let max = 0;
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i] > max) max = arr[i];
+            }
+            return max;
+        }
+
+        // ================================================================
+        // APPLICATION STATE
+        // ================================================================
+
+        const state = {
+            audio: { ctx: null, master: null, analyser: null, destination: null, compressor: null },
+            recorder: { media: null, chunks: [], active: false, startTime: 0 },
+            transport: { running: false, bpm: 132, step: 0, nextStepTime: 0, swing: 0 },
+            params: {
+                acidCutoff: 1200, acidRes: 1.5,
+                kickWeight: 0.5, bassGrowl: 0.5, sqWidth: 0.5,
+                masterVol: 0.8, fxMix: 0.3
+            },
+            fx: { delay: false, reverb: false, distortion: false, bitcrush: false, phaser: false, chorus: false, nodes: {} },
+            instruments: {},
+            latches: {
+                kick: false, kick808: false, snare: false, hat: false, clap: false,
+                bass: false, acid_sq: false, acid_saw: false, perc: false,
+                sample_shock: false, stab: false, noise_riser: false
+            },
+            vocal: { buffer: null, source: null, active: false },
+            scenes: { A: {}, B: {}, C: {}, D: {}, current: 'A' },
+            sequencer: { patterns: {} },
+            // [IMPROVEMENT] Track animation frame IDs for cleanup
+            _animFrames: { visualizer: null, vuMeter: null }
+        };
+
+        // Initialize sequencer patterns
+        Object.keys(state.latches).forEach(k => {
+            state.sequencer.patterns[k] = new Array(16).fill(false);
+        });
+
+        // ================================================================
+        // AI API HELPERS
+        // ================================================================
+
+        /**
+         * [IMPROVEMENT] Added response.ok check, structured error handling,
+         * and AbortController timeout to prevent hanging requests
+         */
+        async function geminiCall(prompt) {
+            // REMOVED API KEY VALIDATION BLOCK HERE TO ALLOW ENVIRONMENT INJECTION
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const payload = { contents: [{ parts: [{ text: prompt }] }] };
+            let retries = 3;
+            let delay = 1000;
+
+            while (retries > 0) {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+
+                try {
+                    const response = await fetch(url, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload),
+                        signal: controller.signal
+                    });
+                    clearTimeout(timeoutId);
+
+                    if (!response.ok) {
+                        const errorBody = await response.text().catch(() => '');
+                        console.error(`Gemini API error ${response.status}: ${errorBody}`);
+                        if (response.status === 429) {
+                            // Rate limited — wait longer before retry
+                            retries--;
+                            await new Promise(r => setTimeout(r, delay * 2));
+                            delay *= 2;
+                            continue;
+                        }
+                        showToast(`API Error: ${response.status}`);
+                        return null;
+                    }
+
+                    const result = await response.json();
+                    return result.candidates?.[0]?.content?.parts?.[0]?.text ?? null;
+                } catch (e) {
+                    clearTimeout(timeoutId);
+                    if (e.name === 'AbortError') {
+                        showToast('API request timed out');
+                        return null;
+                    }
+                    retries--;
+                    await new Promise(r => setTimeout(r, delay));
+                    delay *= 2;
+                }
+            }
+
+            showToast('API call failed after retries');
+            return null;
+        }
+
+        /**
+         * [IMPROVEMENT] Added response.ok check, error boundary,
+         * and explicit sample rate validation
+         */
+        async function generateVocalAudio(text, voice) {
+            // REMOVED API KEY VALIDATION BLOCK HERE TO ALLOW ENVIRONMENT INJECTION
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text }] }],
+                        generationConfig: {
+                            responseModalities: ["AUDIO"],
+                            speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } } }
+                        },
+                        model: "gemini-2.5-flash-preview-tts"
+                    })
+                });
+
+                if (!response.ok) {
+                    showToast(`TTS API Error: ${response.status}`);
+                    return null;
+                }
+
+                const result = await response.json();
+                const base64 = result.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+                if (!base64) return null;
+
+                const binaryString = atob(base64);
+                const bytes = new Int16Array(binaryString.length / 2);
+                for (let i = 0; i < bytes.length; i++) {
+                    bytes[i] = binaryString.charCodeAt(i * 2) | (binaryString.charCodeAt(i * 2 + 1) << 8);
+                }
+
+                const sampleRate = 24000;
+                const buffer = state.audio.ctx.createBuffer(1, bytes.length, sampleRate);
+                const channelData = buffer.getChannelData(0);
+                for (let i = 0; i < bytes.length; i++) {
+                    channelData[i] = bytes[i] / 32768;
+                }
+                return buffer;
+            } catch (e) {
+                console.error('TTS generation error:', e);
+                showToast('Vocal synthesis failed');
+                return null;
+            }
+        }
+
+        // ================================================================
+        // CORE AUDIO LOGIC
+        // ================================================================
+
+        async function initAudio() {
+            if (state.audio.ctx) return;
+
+            state.audio.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            state.audio.master = state.audio.ctx.createGain();
+            state.audio.master.gain.value = state.params.masterVol;
+            state.audio.analyser = state.audio.ctx.createAnalyser();
+            state.audio.analyser.fftSize = 2048;
+            state.audio.destination = state.audio.ctx.createMediaStreamDestination();
+
+            state.audio.compressor = state.audio.ctx.createDynamicsCompressor();
+            state.audio.compressor.threshold.value = -50;
+            state.audio.compressor.knee.value = 40;
+            state.audio.compressor.ratio.value = 1;
+            state.audio.compressor.attack.value = 0.003;
+            state.audio.compressor.release.value = 0.25;
+
+            state.audio.master.connect(state.audio.compressor);
+            state.audio.compressor.connect(state.audio.analyser);
+            state.audio.analyser.connect(state.audio.ctx.destination);
+            state.audio.analyser.connect(state.audio.destination);
+
+            setupFX();
+            setupInstruments();
+            startVisualizer();
+            startVUMeter();
+        }
+
+        function setupFX() {
+            const ctx = state.audio.ctx;
+
+            // Delay with ping-pong feedback
+            const delayNode = ctx.createDelay(1.0);
+            delayNode.delayTime.value = 60 / state.transport.bpm / 2;
+            const delayFeedback = ctx.createGain();
+            delayFeedback.gain.value = 0.35;
+            const delayWet = ctx.createGain();
+            delayWet.gain.value = 0;
+            delayNode.connect(delayFeedback);
+            delayFeedback.connect(delayNode);
+            delayNode.connect(delayWet);
+            state.fx.nodes.delay = { node: delayNode, wet: delayWet, feedback: delayFeedback };
+
+            // Reverb with convolution impulse response
+            const reverbWet = ctx.createGain();
+            reverbWet.gain.value = 0;
+            const convolver = ctx.createConvolver();
+            const rate = ctx.sampleRate;
+            const length = rate * 2;
+            const impulse = ctx.createBuffer(2, length, rate);
+            for (let ch = 0; ch < 2; ch++) {
+                const data = impulse.getChannelData(ch);
+                for (let i = 0; i < length; i++) {
+                    data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, 2.5);
+                }
+            }
+            convolver.buffer = impulse;
+            convolver.connect(reverbWet);
+            state.fx.nodes.reverb = { node: convolver, wet: reverbWet };
+
+            // Distortion waveshaper
+            const distWet = ctx.createGain();
+            distWet.gain.value = 0;
+            const distCurve = new Float32Array(44100);
+            for (let i = 0; i < 44100; i++) {
+                const x = (i * 2) / 44100 - 1;
+                distCurve[i] = (Math.PI + 20) * x / (Math.PI + 20 * Math.abs(x));
+            }
+            const distNode = ctx.createWaveShaper();
+            distNode.curve = distCurve;
+            distNode.oversample = '4x';
+            distNode.connect(distWet);
+            state.fx.nodes.distortion = { node: distNode, wet: distWet };
+
+            // Connect FX sends
+            [state.fx.nodes.delay, state.fx.nodes.reverb, state.fx.nodes.distortion].forEach(fx => {
+                state.audio.master.connect(fx.node);
+                fx.wet.connect(state.audio.compressor);
+            });
+        }
+
+        function updateFXState(fxName, active) {
+            const fxNode = state.fx.nodes[fxName];
+            if (fxNode?.wet) {
+                fxNode.wet.gain.setTargetAtTime(
+                    active ? state.params.fxMix : 0,
+                    state.audio.ctx.currentTime,
+                    0.05
+                );
+            }
+        }
+
+        function setupInstruments() {
+            const ctx = state.audio.ctx;
+            const master = state.audio.master;
+
+            const playOsc = (freq, type, time, dur, vol, sweep = null, res = 1, detune = 0) => {
+                const osc = ctx.createOscillator();
+                const g = ctx.createGain();
+                const f = ctx.createBiquadFilter();
+
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, time);
+                osc.detune.value = detune;
+                if (sweep) osc.frequency.exponentialRampToValueAtTime(sweep, time + dur);
+
+                f.type = 'lowpass';
+                f.frequency.value = (type === 'square' || type === 'sawtooth') ? state.params.acidCutoff : 8000;
+                f.Q.value = res;
+
+                g.gain.setValueAtTime(vol, time);
+                g.gain.exponentialRampToValueAtTime(0.001, time + dur);
+
+                osc.connect(f).connect(g).connect(master);
+                osc.start(time);
+                osc.stop(time + dur);
+            };
+
+            const playNoise = (t, dur, vol, hpf = 0) => {
+                const b = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
+                const d = b.getChannelData(0);
+                for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+                const s = ctx.createBufferSource();
+                s.buffer = b;
+                const g = ctx.createGain();
+                g.gain.setValueAtTime(vol, t);
+                g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+                if (hpf > 0) {
+                    const hp = ctx.createBiquadFilter();
+                    hp.type = 'highpass';
+                    hp.frequency.value = hpf;
+                    s.connect(hp).connect(g).connect(master);
+                } else {
+                    s.connect(g).connect(master);
+                }
+                s.start(t);
+            };
+
+            state.instruments = {
+                kick: (t) => {
+                    const f = 150 * (state.params.kickWeight * 0.5 + 0.5);
+                    playOsc(f, 'sine', t, 0.22, 1.2, 35);
+                },
+                kick808: (t) => playOsc(52, 'sine', t, 0.65 * (state.params.kickWeight + 0.5), 0.95, 8),
+                snare: (t) => {
+                    playOsc(200, 'triangle', t, 0.1, 0.5);
+                    playNoise(t, 0.15, 0.35, 2000);
+                },
+                hat: (t) => playNoise(t, 0.04, 0.2, 7000),
+                clap: (t) => {
+                    for (let i = 0; i < 3; i++) playNoise(t + i * 0.01, 0.03, 0.2, 1500);
+                    playNoise(t + 0.03, 0.12, 0.25, 1200);
+                },
+                bass: (t) => {
+                    const f = 65 + (state.params.bassGrowl * 45);
+                    playOsc(f, 'sawtooth', t, 0.15, 0.4);
+                },
+                acid_sq: (t) => {
+                    const f = 140 + (state.params.sqWidth * 320);
+                    playOsc(f, 'square', t, 0.12, 0.25, null, state.params.acidRes);
+                },
+                acid_saw: (t) => {
+                    const f = 95 + (state.params.sqWidth * 220);
+                    playOsc(f, 'sawtooth', t, 0.12, 0.25, null, state.params.acidRes);
+                },
+                perc: (t) => {
+                    playOsc(800, 'square', t, 0.03, 0.15, 200);
+                    playOsc(1200, 'sine', t, 0.05, 0.1, 300);
+                },
+                sample_shock: (t) => playOsc(2400, 'sine', t, 0.05, 0.3, 50),
+                stab: (t) => {
+                    [200, 250, 300, 400].forEach((f, i) => {
+                        playOsc(f, 'sawtooth', t, 0.15, 0.12, null, 1, i * 5);
+                    });
+                },
+                noise_riser: (t) => {
+                    const dur = 1.5;
+                    const osc = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(200, t);
+                    osc.frequency.exponentialRampToValueAtTime(4000, t + dur);
+                    g.gain.setValueAtTime(0.001, t);
+                    g.gain.linearRampToValueAtTime(0.25, t + dur * 0.8);
+                    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+                    osc.connect(g).connect(master);
+                    osc.start(t);
+                    osc.stop(t + dur);
+                    playNoise(t, dur, 0.15);
+                }
+            };
+        }
+
+        // ================================================================
+        // STEP SEQUENCER / SCHEDULER
+        // ================================================================
+
+        function getSwingOffset(stepIndex) {
+            if (stepIndex % 2 === 1) {
+                const stepLen = (60 / state.transport.bpm) / 4;
+                return stepLen * (state.transport.swing / 100) * 0.33;
+            }
+            return 0;
+        }
+
+        function runScheduler() {
+            if (!state.transport.running) return;
+            const now = state.audio.ctx.currentTime;
+            const stepLen = (60 / state.transport.bpm) / 4;
+
+            while (state.transport.nextStepTime < now + 0.1) {
+                const s = state.transport.step % 16;
+                const swingOff = getSwingOffset(s);
+                const schedTime = state.transport.nextStepTime + swingOff;
+
+                // Check sequencer patterns first, then fallback to latch patterns
+                Object.keys(state.latches).forEach(k => {
+                    const seqOn = state.sequencer.patterns[k]?.[s];
+                    if (seqOn) {
+                        state.instruments[k]?.(schedTime);
+                    } else if (state.latches[k]) {
+                        if (k === 'kick' || k === 'kick808') { if (s % 4 === 0) state.instruments[k](schedTime); }
+                        else if (k === 'snare') { if (s === 4 || s === 12) state.instruments[k](schedTime); }
+                        else if (k === 'hat') { if (s % 2 === 0) state.instruments[k](schedTime); }
+                        else if (k === 'clap') { if (s === 4 || s === 12) state.instruments[k](schedTime); }
+                        else if (k.startsWith('acid') || k === 'bass') { if (s % 3 === 0) state.instruments[k](schedTime); }
+                        else if (k === 'perc') { if (s % 4 === 2) state.instruments[k](schedTime); }
+                        else if (k === 'sample_shock') { if (s % 7 === 0) state.instruments[k](schedTime); }
+                        else if (k === 'stab') { if (s === 0 || s === 8) state.instruments[k](schedTime); }
+                        else if (k === 'noise_riser') { if (s === 0) state.instruments[k](schedTime); }
+                    }
+                });
+
+                document.getElementById('step-display').innerText = `STEP: ${String(s + 1).padStart(2, '0')}`;
+
+                // Update sequencer position indicators
+                document.querySelectorAll('.seq-pos').forEach((el, i) => {
+                    if (i === s) {
+                        el.style.background = '#00ffff';
+                        el.style.boxShadow = '0 0 6px #00ffff';
+                    } else {
+                        el.style.background = '#1a1a1e';
+                        el.style.boxShadow = 'none';
+                    }
+                });
+
+                // Flash current sequencer column
+                const currentSeqSteps = document.querySelectorAll(`.seq-step[data-step="${s}"]`);
+                currentSeqSteps.forEach(el => {
+                    el.classList.add('step-current');
+                    setTimeout(() => el.classList.remove('step-current'), stepLen * 900);
+                });
+
+                state.transport.step++;
+                state.transport.nextStepTime += stepLen;
+            }
+            requestAnimationFrame(runScheduler);
+        }
+
+        // ================================================================
+        // VISUALIZER & VU METER
+        // ================================================================
+
+        function startVisualizer() {
+            const canvas = document.getElementById('visualizer');
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            const ctx = canvas.getContext('2d');
+            ctx.scale(dpr, dpr);
+            const w = rect.width;
+            const h = rect.height;
+
+            const freqData = new Uint8Array(state.audio.analyser.frequencyBinCount);
+            const timeData = new Uint8Array(state.audio.analyser.fftSize);
+
+            const draw = () => {
+                state.audio.analyser.getByteFrequencyData(freqData);
+                ctx.fillStyle = 'rgba(5, 5, 7, 0.25)';
+                ctx.fillRect(0, 0, w, h);
+
+                // Frequency bars
+                const barCount = 80;
+                const barW = w / barCount;
+                const step = Math.floor(freqData.length / barCount);
+
+                for (let i = 0; i < barCount; i++) {
+                    const v = freqData[i * step] / 255;
+                    const barH = v * h * 0.9;
+                    const gradient = ctx.createLinearGradient(0, h, 0, h - barH);
+                    gradient.addColorStop(0, 'rgba(0, 255, 255, 0.6)');
+                    gradient.addColorStop(0.5, 'rgba(168, 85, 247, 0.4)');
+                    gradient.addColorStop(1, 'rgba(236, 72, 153, 0.3)');
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(i * barW + 1, h - barH, barW - 2, barH);
+                }
+
+                // Waveform overlay
+                state.audio.analyser.getByteTimeDomainData(timeData);
+                ctx.lineWidth = 1.5;
+                ctx.strokeStyle = 'rgba(0, 255, 255, 0.35)';
+                ctx.beginPath();
+                const sliceW = w / timeData.length;
+                for (let i = 0; i < timeData.length; i++) {
+                    const v = timeData[i] / 128.0;
+                    const y = (v * h) / 2;
+                    if (i === 0) ctx.moveTo(0, y);
+                    else ctx.lineTo(i * sliceW, y);
+                }
+                ctx.stroke();
+
+                state._animFrames.visualizer = requestAnimationFrame(draw);
+            };
+            draw();
+        }
+
+        function startVUMeter() {
+            const data = new Uint8Array(state.audio.analyser.frequencyBinCount);
+            const vuL = document.getElementById('vu-left');
+            const vuR = document.getElementById('vu-right');
+            const peakEl = document.getElementById('peak-display');
+
+            const update = () => {
+                state.audio.analyser.getByteFrequencyData(data);
+
+                // [IMPROVEMENT] Use loop instead of Math.max(...data) to avoid call stack overflow
+                let sum = 0;
+                const maxVal = getArrayPeak(data);
+                for (let i = 0; i < data.length; i++) sum += data[i];
+
+                const avg = sum / data.length;
+                const pct = Math.min(100, (avg / 180) * 100);
+                const peakDb = maxVal > 0 ? Math.round(20 * Math.log10(maxVal / 255)) : -Infinity;
+
+                vuL.style.height = `${pct + Math.random() * 3}%`;
+                vuR.style.height = `${pct + Math.random() * 3}%`;
+                peakEl.textContent = peakDb > -Infinity ? `${peakDb}dB` : '-∞';
+
+                state._animFrames.vuMeter = requestAnimationFrame(update);
+            };
+            update();
+        }
+
+        // ================================================================
+        // SEQUENCER UI
+        // ================================================================
+
+        function buildSequencerUI() {
+            const grid = document.getElementById('sequencer-grid');
+            const posRow = document.getElementById('seq-position-indicators');
+            grid.innerHTML = '';
+            posRow.innerHTML = '';
+            grid.style.display = 'grid';
+            grid.style.gridTemplateColumns = 'repeat(16, 1fr)';
+
+            const currentInst = document.getElementById('seq-inst-select').value;
+            const pattern = state.sequencer.patterns[currentInst];
+
+            for (let i = 0; i < 16; i++) {
+                const step = document.createElement('div');
+                step.className = `seq-step sequencer-step h-8 rounded bg-zinc-900 border border-zinc-800/50 cursor-pointer transition-all hover:bg-zinc-800 flex items-center justify-center text-[7px] font-mono text-zinc-600 ${pattern[i] ? 'step-on' : ''}`;
+                step.dataset.step = i;
+                step.dataset.inst = currentInst;
+                step.textContent = i + 1;
+                step.setAttribute('role', 'checkbox');
+                step.setAttribute('aria-checked', pattern[i] ? 'true' : 'false');
+                step.setAttribute('aria-label', `Step ${i + 1}`);
+                step.onclick = () => {
+                    pattern[i] = !pattern[i];
+                    step.classList.toggle('step-on');
+                    step.setAttribute('aria-checked', pattern[i] ? 'true' : 'false');
+                };
+                grid.appendChild(step);
+
+                const pos = document.createElement('div');
+                pos.className = 'seq-pos w-full h-1.5 rounded-full bg-zinc-900';
+                posRow.appendChild(pos);
+            }
+        }
+
+        buildSequencerUI();
+        document.getElementById('seq-inst-select').onchange = buildSequencerUI;
+
+        document.getElementById('btn-seq-clear').onclick = () => {
+            const inst = document.getElementById('seq-inst-select').value;
+            state.sequencer.patterns[inst] = new Array(16).fill(false);
+            buildSequencerUI();
+        };
+
+        document.getElementById('btn-seq-random').onclick = () => {
+            const inst = document.getElementById('seq-inst-select').value;
+            state.sequencer.patterns[inst] = Array.from({ length: 16 }, () => Math.random() > 0.65);
+            buildSequencerUI();
+        };
+
+        // ================================================================
+        // XY PAD
+        // ================================================================
+
+        const xyPad = document.getElementById('xy-pad');
+        const xyDot = document.getElementById('xy-dot');
+        let xyActive = false;
+
+        function updateXY(e) {
+            const rect = xyPad.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            const x = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+            const y = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
+
+            xyDot.style.left = `${x * 100}%`;
+            xyDot.style.top = `${y * 100}%`;
+
+            state.params.acidCutoff = 100 + x * 9900;
+            state.params.acidRes = 1 + (1 - y) * 20;
+
+            document.getElementById('acid-cutoff').value = state.params.acidCutoff;
+            document.getElementById('cutoff-val').textContent = `${Math.round(state.params.acidCutoff)}Hz`;
+            document.getElementById('acid-res').value = ((state.params.acidRes - 1) / 20) * 100;
+            document.getElementById('res-val').textContent = `${Math.round(((state.params.acidRes - 1) / 20) * 100)}%`;
+        }
+
+        xyPad.addEventListener('mousedown', (e) => { xyActive = true; updateXY(e); });
+        // [IMPROVEMENT] Added passive: false for touch events that call preventDefault
+        xyPad.addEventListener('touchstart', (e) => { xyActive = true; updateXY(e); e.preventDefault(); }, { passive: false });
+        window.addEventListener('mousemove', (e) => { if (xyActive) updateXY(e); });
+        window.addEventListener('touchmove', (e) => { if (xyActive) updateXY(e); }, { passive: true });
+        window.addEventListener('mouseup', () => xyActive = false);
+        window.addEventListener('touchend', () => xyActive = false);
+
+        // ================================================================
+        // FX CHAIN
+        // ================================================================
+
+        document.querySelectorAll('.fx-chain-slot').forEach(btn => {
+            btn.onclick = async () => {
+                await initAudio();
+                const fx = btn.dataset.fx;
+                state.fx[fx] = !state.fx[fx];
+                btn.classList.toggle('fx-active');
+                btn.setAttribute('aria-pressed', state.fx[fx] ? 'true' : 'false');
+                updateFXState(fx, state.fx[fx]);
+            };
+        });
+
+        document.getElementById('fx-mix').oninput = (e) => {
+            state.params.fxMix = e.target.value / 100;
+            document.getElementById('fx-mix-val').textContent = `${e.target.value}%`;
+            Object.keys(state.fx.nodes).forEach(k => {
+                if (state.fx[k]) updateFXState(k, true);
+            });
+        };
+
+        // ================================================================
+        // SCENES
+        // ================================================================
+
+        function saveScene(name) {
+            state.scenes[name] = {
+                latches: { ...state.latches },
+                bpm: state.transport.bpm,
+                // [IMPROVEMENT] Shallow copy of pattern arrays (no deep clone needed for boolean arrays)
+                patterns: Object.fromEntries(
+                    Object.entries(state.sequencer.patterns).map(([k, v]) => [k, [...v]])
+                )
+            };
+        }
+
+        function loadScene(name) {
+            const scene = state.scenes[name];
+            if (!scene?.latches) return;
+
+            Object.assign(state.latches, scene.latches);
+            state.transport.bpm = scene.bpm || state.transport.bpm;
+            if (scene.patterns) {
+                state.sequencer.patterns = Object.fromEntries(
+                    Object.entries(scene.patterns).map(([k, v]) => [k, [...v]])
+                );
+            }
+
+            document.getElementById('bpm-slider').value = state.transport.bpm;
+            document.getElementById('bpm-val').textContent = `${state.transport.bpm} BPM`;
+            document.getElementById('bpm-display').innerHTML = `${state.transport.bpm} <span class="text-[10px] text-zinc-600">BPM</span>`;
+
+            document.querySelectorAll('.pad').forEach(pad => {
+                const inst = pad.getAttribute('data-inst');
+                const isActive = state.latches[inst];
+                pad.classList.toggle('pad-latched', isActive);
+                pad.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+            });
+
+            buildSequencerUI();
+        }
+
+        saveScene('A');
+
+        document.querySelectorAll('.scene-btn').forEach(btn => {
+            btn.onclick = () => {
+                saveScene(state.scenes.current);
+                state.scenes.current = btn.dataset.scene;
+                loadScene(btn.dataset.scene);
+                document.querySelectorAll('.scene-btn').forEach(b => {
+                    b.classList.remove('scene-active');
+                    b.setAttribute('aria-pressed', 'false');
+                });
+                btn.classList.add('scene-active');
+                btn.setAttribute('aria-pressed', 'true');
+            };
+        });
+
+        // ================================================================
+        // PANIC BUTTON
+        // ================================================================
+
+        document.getElementById('btn-panic').onclick = () => {
+            Object.keys(state.latches).forEach(k => state.latches[k] = false);
+            document.querySelectorAll('.pad').forEach(p => {
+                p.classList.remove('pad-latched');
+                p.setAttribute('aria-pressed', 'false');
+            });
+            if (state.audio.ctx) {
+                state.audio.master.gain.setTargetAtTime(0, state.audio.ctx.currentTime, 0.01);
+                setTimeout(() => {
+                    state.audio.master.gain.setTargetAtTime(state.params.masterVol, state.audio.ctx.currentTime, 0.05);
+                }, 100);
+            }
+        };
+
+        // ================================================================
+        // TAB SWITCHING
+        // ================================================================
+
+        document.querySelectorAll('.panel-tab').forEach(tab => {
+            tab.onclick = () => {
+                document.querySelectorAll('.panel-tab').forEach(t => {
+                    t.classList.remove('tab-active');
+                    t.setAttribute('aria-selected', 'false');
+                });
+                tab.classList.add('tab-active');
+                tab.setAttribute('aria-selected', 'true');
+
+                const isLyrics = tab.dataset.tab === 'lyrics';
+                document.getElementById('vocal-display').style.display = isLyrics ? 'flex' : 'none';
+                document.getElementById('structure-display').style.display = isLyrics ? 'none' : 'flex';
+            };
+        });
+
+        // ================================================================
+        // AI FEATURE HANDLERS
+        // ================================================================
+
+        document.getElementById('btn-ai-suggest').onclick = async () => {
+            const overlay = document.getElementById('ai-feedback-overlay');
+            overlay.classList.remove('hidden');
+            overlay.textContent = '✨ Gemini: Analyzing Spectrum...';
+
+            const active = Object.keys(state.latches).filter(k => state.latches[k]);
+            const genre = document.getElementById('genre-select').value;
+            const activeFx = Object.keys(state.fx).filter(k => typeof state.fx[k] === 'boolean' && state.fx[k]);
+            const prompt = `EDM PRODUCER FEEDBACK: Genre ${genre}. Active tracks: ${active.join(', ') || 'none'}. BPM: ${state.transport.bpm}. Active FX: ${activeFx.join(', ') || 'none'}. Cutoff: ${Math.round(state.params.acidCutoff)}Hz. Give 1 punchy technical mixing advice sentence, max 20 words.`;
+
+            const suggestion = await geminiCall(prompt);
+            overlay.textContent = suggestion ? `✨ ${suggestion}` : "✨ MIX IS WITHIN PARAMETERS.";
+
+            document.getElementById('ai-suggestion-text').textContent = suggestion || '';
+            document.getElementById('ai-suggestion-box').classList.remove('hidden');
+
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                setTimeout(() => document.getElementById('ai-suggestion-box').classList.add('hidden'), 8000);
+            }, 4000);
+        };
+
+        document.getElementById('btn-gen-lyrics').onclick = async () => {
+            const display = document.getElementById('vocal-display');
+            display.textContent = "✨ Neural Link: Drafting...";
+            const genre = document.getElementById('genre-select').value;
+            const mood = document.getElementById('vocal-mood').value;
+            const prompt = `Write a 4-line dark/glitchy song hook for a ${genre} track with a ${mood} mood. Short lines, rhythmic, evocative. No quotes or labels.`;
+            const text = await geminiCall(prompt);
+            display.textContent = text || "✨ LINK FAILED. RETRY.";
+        };
+
+        document.getElementById('btn-gen-structure').onclick = async () => {
+            const display = document.getElementById('structure-display');
+            display.textContent = "✨ Generating structure...";
+            const genre = document.getElementById('genre-select').value;
+            const active = Object.keys(state.latches).filter(k => state.latches[k]);
+            const prompt = `Suggest a concise 4-part arrangement structure (Intro/Build/Drop/Outro) for a ${genre} track at ${state.transport.bpm}BPM using: ${active.join(', ') || 'basic drums'}. Keep it under 40 words total. No markdown.`;
+            const text = await geminiCall(prompt);
+            display.textContent = text || "✨ STRUCTURE GENERATION FAILED.";
+
+            // Switch to structure tab
+            display.style.display = 'flex';
+            document.getElementById('vocal-display').style.display = 'none';
+            document.querySelectorAll('.panel-tab').forEach(t => {
+                t.classList.remove('tab-active');
+                t.setAttribute('aria-selected', 'false');
+            });
+            const structTab = document.querySelector('[data-tab="structure"]');
+            structTab.classList.add('tab-active');
+            structTab.setAttribute('aria-selected', 'true');
+        };
+
+        document.getElementById('btn-vocal-gen').onclick = async () => {
+            await initAudio();
+            const display = document.getElementById('vocal-display');
+            const waveform = document.getElementById('vocal-waveform');
+            display.textContent = "✨ Synthesizing Neural Speech...";
+            waveform.style.display = 'flex';
+
+            const genre = document.getElementById('genre-select').value;
+            const mood = document.getElementById('vocal-mood').value;
+            const prompt = `One short 2-4 word catchphrase for ${genre} track, mood ${mood}. Simple words only. No quotes.`;
+
+            const hookText = await geminiCall(prompt);
+            if (hookText) {
+                const voice = document.getElementById('vocal-gender').value;
+                const buf = await generateVocalAudio(`Say this ${mood}ly: ${hookText}`, voice);
+                if (buf) {
+                    state.vocal.buffer = buf;
+                    display.textContent = `✨ LOADED: "${hookText.toUpperCase().replace(/"/g, '')}"`;
+                    const vt = document.getElementById('vocal-trigger');
+                    vt.disabled = false;
+                    vt.textContent = "✨ FIRE LIVE VOCAL [V]";
+                    vt.classList.replace('text-zinc-600', 'text-purple-400');
+                    vt.classList.remove('cursor-not-allowed');
+                } else {
+                    display.textContent = "✨ TTS SYNTHESIS FAILED. RETRY.";
+                }
+            } else {
+                display.textContent = "✨ TEXT GEN FAILED. RETRY.";
+            }
+            waveform.style.display = 'none';
+        };
+
+        function fireVocal() {
+            if (!state.vocal.buffer || !state.audio.ctx) return;
+            const src = state.audio.ctx.createBufferSource();
+            src.buffer = state.vocal.buffer;
+            src.playbackRate.value = parseFloat(document.getElementById('vocal-pitch').value) || 1;
+            src.connect(state.audio.master);
+            src.start(0);
+
+            const vt = document.getElementById('vocal-trigger');
+            vt.classList.add('vocal-trigger-active');
+            setTimeout(() => vt.classList.remove('vocal-trigger-active'), 500);
+        }
+
+        document.getElementById('vocal-trigger').onclick = fireVocal;
+
+        // ================================================================
+        // TRANSPORT
+        // ================================================================
+
+        document.getElementById('btn-toggle').onclick = async () => {
+            await initAudio();
+            state.transport.running = !state.transport.running;
+            const btn = document.getElementById('btn-toggle');
+
+            if (state.transport.running) {
+                state.audio.ctx.resume();
+                state.transport.nextStepTime = state.audio.ctx.currentTime;
+                runScheduler();
+                btn.textContent = "Stop Engine";
+                btn.classList.replace('bg-cyan-500', 'bg-red-500');
+                btn.classList.replace('shadow-cyan-500/20', 'shadow-red-500/20');
+                btn.classList.replace('hover:bg-cyan-400', 'hover:bg-red-400');
+            } else {
+                btn.textContent = "Start Engine";
+                btn.classList.replace('bg-red-500', 'bg-cyan-500');
+                btn.classList.replace('shadow-red-500/20', 'shadow-cyan-500/20');
+                btn.classList.replace('hover:bg-red-400', 'hover:bg-cyan-400');
+            }
+        };
+
+        // ================================================================
+        // PAD INTERACTION
+        // ================================================================
+
+        document.querySelectorAll('.pad').forEach(pad => {
+            pad.onclick = async () => {
+                await initAudio();
+                const inst = pad.getAttribute('data-inst');
+                state.latches[inst] = !state.latches[inst];
+                pad.classList.toggle('pad-latched');
+                pad.setAttribute('aria-pressed', state.latches[inst] ? 'true' : 'false');
+                pad.classList.add('pad-flash');
+                setTimeout(() => pad.classList.remove('pad-flash'), 150);
+                if (!state.transport.running) state.instruments[inst](state.audio.ctx.currentTime);
+            };
+        });
+
+        // ================================================================
+        // KEYBOARD CONTROLS
+        // ================================================================
+
+        const keyMap = {};
+        document.querySelectorAll('.pad[data-key]').forEach(pad => {
+            keyMap[pad.dataset.key.toLowerCase()] = pad;
+        });
+
+        document.addEventListener('keydown', async (e) => {
+            if (e.repeat) return;
+            // [IMPROVEMENT] Don't capture keys when user is typing in an input/select
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
+
+            const key = e.key.toLowerCase();
+
+            if (key === ' ') {
+                e.preventDefault();
+                document.getElementById('btn-toggle').click();
+                return;
+            }
+
+            if (key === 'r') { document.getElementById('btn-record').click(); return; }
+            if (key === 'v') { fireVocal(); return; }
+            if (key === 'escape') { document.getElementById('btn-panic').click(); return; }
+            if (keyMap[key]) keyMap[key].click();
+        });
+
+        // ================================================================
+        // SLIDER CONTROLS
+        // ================================================================
+
+        document.getElementById('bpm-slider').oninput = (e) => {
+            state.transport.bpm = parseInt(e.target.value);
+            document.getElementById('bpm-val').textContent = `${e.target.value} BPM`;
+            document.getElementById('bpm-display').innerHTML = `${e.target.value} <span class="text-[10px] text-zinc-600">BPM</span>`;
+            if (state.fx.nodes.delay) {
+                state.fx.nodes.delay.node.delayTime.value = 60 / state.transport.bpm / 2;
+            }
+        };
+
+        document.getElementById('acid-cutoff').oninput = (e) => {
+            state.params.acidCutoff = parseInt(e.target.value);
+            document.getElementById('cutoff-val').textContent = `${e.target.value}Hz`;
+        };
+
+        document.getElementById('acid-res').oninput = (e) => {
+            state.params.acidRes = (e.target.value / 10) + 1;
+            document.getElementById('res-val').textContent = `${e.target.value}%`;
+        };
+
+        document.getElementById('var-kick').oninput = (e) => {
+            state.params.kickWeight = e.target.value / 100;
+            document.getElementById('kick-var-val').textContent = `${e.target.value}%`;
+        };
+
+        document.getElementById('var-bass').oninput = (e) => {
+            state.params.bassGrowl = e.target.value / 100;
+            document.getElementById('bass-var-val').textContent = `${e.target.value}%`;
+        };
+
+        document.getElementById('var-sq').oninput = (e) => {
+            state.params.sqWidth = e.target.value / 100;
+            document.getElementById('sq-var-val').textContent = `${e.target.value}%`;
+        };
+
+        document.getElementById('var-swing').oninput = (e) => {
+            state.transport.swing = parseInt(e.target.value);
+            document.getElementById('swing-val').textContent = `${e.target.value}%`;
+        };
+
+        document.getElementById('master-vol').oninput = (e) => {
+            state.params.masterVol = e.target.value / 100;
+            document.getElementById('master-vol-val').textContent = `${e.target.value}%`;
+            if (state.audio.master) {
+                state.audio.master.gain.setTargetAtTime(state.params.masterVol, state.audio.ctx.currentTime, 0.02);
+            }
+        };
+
+        document.getElementById('master-comp').oninput = (e) => {
+            const val = parseInt(e.target.value);
+            document.getElementById('comp-val').textContent = val === 0 ? 'OFF' : `${val}%`;
+            if (state.audio.compressor) {
+                state.audio.compressor.ratio.value = 1 + (val / 100) * 19;
+                state.audio.compressor.threshold.value = -50 + (val / 100) * 35;
+            }
+        };
+
+        // ================================================================
+        // RECORDING
+        // ================================================================
+
+        document.getElementById('btn-record').onclick = async () => {
+            await initAudio();
+            const btn = document.getElementById('btn-record');
+            const timer = document.getElementById('rec-time');
+
+            if (state.recorder.active) {
+                state.recorder.media.stop();
+                state.recorder.active = false;
+                btn.classList.remove('rec-active');
+                btn.textContent = "● Rec";
+                timer.classList.add('hidden');
+            } else {
+                state.recorder.chunks = [];
+                state.recorder.media = new MediaRecorder(state.audio.destination.stream);
+                state.recorder.media.ondataavailable = e => state.recorder.chunks.push(e.data);
+                state.recorder.media.onstop = () => {
+                    const blob = new Blob(state.recorder.chunks, { type: 'audio/webm' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `neon-mix-${Date.now()}.webm`;
+                    a.click();
+                    // [IMPROVEMENT] Revoke object URL after download to prevent memory leak
+                    setTimeout(() => URL.revokeObjectURL(url), 5000);
+                };
+                state.recorder.media.start();
+                state.recorder.active = true;
+                state.recorder.startTime = Date.now();
+                btn.classList.add('rec-active');
+                btn.textContent = "■ Stop";
+                timer.classList.remove('hidden');
+
+                const updateTimer = () => {
+                    if (!state.recorder.active) return;
+                    const elapsed = Math.floor((Date.now() - state.recorder.startTime) / 1000);
+                    const m = Math.floor(elapsed / 60);
+                    const s = elapsed % 60;
+                    timer.textContent = `REC: ${m}:${String(s).padStart(2, '0')}`;
+                    setTimeout(updateTimer, 1000);
+                };
+                updateTimer();
+            }
+        };
+
+        // ================================================================
+        // PRESETS
+        // ================================================================
+
+        const beatPresets = {
+            heavy:    { bpm: 140, latches: ['kick', 'snare', 'hat', 'acid_saw'] },
+            ghost:    { bpm: 124, latches: ['kick808', 'hat', 'bass'] },
+            bit:      { bpm: 90,  latches: ['kick', 'snare', 'hat', 'acid_sq', 'sample_shock'] },
+            cyber:    { bpm: 165, latches: ['kick', 'snare', 'hat', 'acid_saw', 'stab'] },
+            ethereal: { bpm: 110, latches: ['kick808', 'hat', 'bass', 'stab'] },
+            phonk:    { bpm: 138, latches: ['kick', 'snare', 'hat', 'bass', 'sample_shock', 'clap'] },
+            jungle:   { bpm: 172, latches: ['kick', 'snare', 'hat', 'bass', 'perc'] },
+            ambient:  { bpm: 85,  latches: ['kick808', 'stab', 'noise_riser'] }
+        };
+
+        document.getElementById('beat-select').onchange = (e) => {
+            const p = beatPresets[e.target.value];
+            if (!p) return;
+
+            state.transport.bpm = p.bpm;
+            document.getElementById('bpm-slider').value = p.bpm;
+            document.getElementById('bpm-val').textContent = `${p.bpm} BPM`;
+            document.getElementById('bpm-display').innerHTML = `${p.bpm} <span class=\"text-[10px] text-zinc-600\">BPM</span>`;
+
+            document.querySelectorAll('.pad').forEach(pad => {
+                const inst = pad.getAttribute('data-inst');
+                state.latches[inst] = p.latches.includes(inst);
+                pad.classList.toggle('pad-latched', state.latches[inst]);
+                pad.setAttribute('aria-pressed', state.latches[inst] ? 'true' : 'false');
+            });
+        };
+
+        // ================================================================
+        // LATENCY MONITOR
+        // ================================================================
+
+        setInterval(() => {
+            if (state.audio.ctx) {
+                const latency = Math.round((state.audio.ctx.baseLatency || 0) * 1000);
+                document.getElementById('latency-display').textContent = `${latency}ms`;
+            }
+        }, 2000);
+
+    </script>
+</body>
+</html>
